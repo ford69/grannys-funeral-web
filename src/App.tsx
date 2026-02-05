@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Download, Heart, ChevronDown } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 
 function App() {
   const [scrollY, setScrollY] = useState(0);
@@ -175,6 +176,30 @@ function App() {
               </div>
             </div>
           </div>
+
+          <div className="mt-12">
+            <div className="relative w-full rounded-lg overflow-hidden border border-gray-800 hover:border-[#c9a876] transition-all duration-500 aspect-video max-h-[400px] bg-[#151515]">
+              <iframe
+                title="Tigies Gardens, Community 9, Tema - Funeral location"
+                src="https://www.google.com/maps?q=Tigies+Gardens,+Community+9,+Tema,+Ghana&output=embed"
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Tigies+Gardens,+Community+9,+Tema,+Ghana"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute inset-0 z-10 flex items-end justify-center pb-3 cursor-pointer bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                aria-label="Open location in Google Maps"
+              >
+                <span className="px-4 py-2 text-sm font-medium bg-[#c9a876] text-[#0a0a0a] rounded-sm">
+                  Click to open in Google Maps
+                </span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -250,10 +275,24 @@ function App() {
         </div>
       </section>
 
-      <footer className="py-8 px-6 bg-[#0a0a0a] border-t border-gray-900">
-        <div className="max-w-4xl mx-auto text-center text-gray-500 text-sm">
-          <p>In Loving Memory of Obaapanin Mercy Abena Adomaa</p>
-          <p className="mt-2">1942 - 2025</p>
+      <footer className="py-12 px-6 bg-[#0a0a0a] border-t border-gray-900">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="flex flex-col items-center gap-4 mb-8">
+            <p className="text-[#c9a876] text-sm font-medium uppercase tracking-widest">Share this page</p>
+            <div className="bg-white p-3 rounded-lg inline-block">
+              <QRCodeSVG
+                value={typeof window !== 'undefined' ? window.location.href : '#'}
+                size={128}
+                level="M"
+                includeMargin={false}
+              />
+            </div>
+            <p className="text-gray-500 text-xs max-w-[200px]">Scan to open this website on your phone</p>
+          </div>
+          <div className="text-gray-500 text-sm">
+            <p>In Loving Memory of Obaapanin Mercy Abena Adomaa</p>
+            <p className="mt-2">1942 - 2025</p>
+          </div>
         </div>
       </footer>
     </div>
