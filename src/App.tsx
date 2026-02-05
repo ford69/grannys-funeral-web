@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Download, Heart, ChevronDown } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
+import QRCode from 'qrcode';
 
 function App() {
   const [scrollY, setScrollY] = useState(0);
@@ -21,6 +22,28 @@ function App() {
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // Standard print sizes at 300 DPI: 2", 3", 4"
+  const PRINT_DPI = 300;
+  const QR_SIZES = [
+    { label: '2" × 2"', inches: 2, desc: 'Programs, cards' },
+    { label: '3" × 3"', inches: 3, desc: 'Flyers' },
+    { label: '4" × 4"', inches: 4, desc: 'Posters' },
+  ] as const;
+
+  const downloadQR = useCallback(async (inches: number) => {
+    const sizePx = inches * PRINT_DPI;
+    const url = typeof window !== 'undefined' ? window.location.href : '#';
+    const dataUrl = await QRCode.toDataURL(url, {
+      width: sizePx,
+      margin: 2,
+      color: { dark: '#000000', light: '#ffffff' },
+    });
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = `funeral-qr-${inches}in.png`;
+    a.click();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-gray-100">
@@ -288,6 +311,24 @@ function App() {
               />
             </div>
             <p className="text-gray-500 text-xs max-w-[200px]">Scan to open this website on your phone</p>
+            <div className="pt-2 border-t border-gray-800 w-full max-w-sm">
+              <p className="text-gray-500 text-xs mb-3">Download for print (300 DPI)</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {QR_SIZES.map(({ label, inches, desc }) => (
+                  <button
+                    key={inches}
+                    type="button"
+                    onClick={() => downloadQR(inches)}
+                    className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-gray-700 text-gray-300 rounded hover:border-[#c9a876] hover:text-[#c9a876] transition-colors"
+                    title={desc}
+                  >
+                    <Download className="w-4 h-4" />
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <p className="text-gray-600 text-xs mt-2">Standard sizes for programs, flyers & posters</p>
+            </div>
           </div>
           <div className="text-gray-500 text-sm">
             <p>In Loving Memory of Obaapanin Mercy Abena Adomaa</p>
